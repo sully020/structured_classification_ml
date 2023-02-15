@@ -8,3 +8,8 @@ This repository is a single-developer project owned by Christopher Sullivan of W
 4. k-Nearest Neighbor
 
 Using these techniques, XXXXXXXXX.
+
+E-mails:
+https://www.kaggle.com/datasets/balaka18/email-spam-classification-dataset-csv
+Balaka Biswas
+
