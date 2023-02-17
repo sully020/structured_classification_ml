@@ -17,5 +17,11 @@ def create_patient_df():
     return x, y
     #print(x.head(5))
 
-#dtree = DecisionTreeClassifier(criterion = 'entropy')
+def separate_data():
+    x, y = create_emails_df
+    cross_val_score(X=x, y=y)
+
+def decision_tree_emails():
+    dtree = DecisionTreeClassifier(criterion = 'entropy', max_depth = 20, max_features = "sqrt") # ~lg(features) decisions with padding, 
+    dtree.fit(X=x, y=y)                                                                                     # semi-aggressive pruning(?)
 
