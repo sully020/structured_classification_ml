@@ -17,74 +17,89 @@ def create_patients_dframe():
     y = patients['class_val']
     return x, y
 
-
 def decision_tree_emails():
     x, y = create_emails_dframe()
-    dtree = DecisionTreeClassifier(criterion = 'entropy', max_depth = 20, max_features = "sqrt") # ~lg(features) decisions with padding, 
-    scores = cross_val_score(dtree, x, y)                                                        # semi-aggressive pruning(?)
-    print(scores)
+    dtree = DecisionTreeClassifier(criterion = 'gini', max_depth = 25) # ~lg(features) decisions with padding, 
+    scores = cross_val_score(dtree, x, y, cv = 10)                                
+    return scores
 
 def decision_tree_patients():
     x, y = create_patients_dframe()
-    dtree = DecisionTreeClassifier(criterion = 'entropy', max_depth = 20, max_features = "sqrt") 
+    dtree = DecisionTreeClassifier(criterion = 'entropy', max_depth = 6) 
     scores = cross_val_score(dtree, x, y)                                                   
-    print(scores)
+    return scores
 
 
 def neural_network_emails():
     x, y = create_emails_dframe()
-    neural_net = MLPClassifier(6, 'logistic', solver = 'sgd', learning_rate = 'adaptive', max_iter = 450)
+    neural_net = MLPClassifier()
     scores = cross_val_score(neural_net, x, y)                                                   
-    print(scores)
+    return scores
 
 def neural_network_patients():
     x, y = create_patients_dframe()
-    neural_net = MLPClassifier(6, 'logistic', solver = 'sgd', learning_rate = 'constant', max_iter = 450)
+    neural_net = MLPClassifier()
     scores = cross_val_score(neural_net, x, y)                                                   
-    print(scores)
+    return scores
 
 
 def kNN_emails():
     x, y = create_emails_dframe() 
-    kNN = KNeighborsClassifier(500)
+    kNN = KNeighborsClassifier()
     scores = cross_val_score(kNN, x, y)                                                    
-    print(scores)
+    return scores
 
 def kNN_patients():
     x, y = create_patients_dframe()
     kNN = KNeighborsClassifier()
     scores = cross_val_score(kNN, x, y)                                                    
-    print(scores)
+    return scores
 
 
 def random_forest_emails():
     x, y = create_emails_dframe() 
     random_forest = RandomForestClassifier()
     scores = cross_val_score(random_forest, x, y)                                                    
-    print(scores)
+    return scores
 
 def random_forest_patients():
-    x, y = create_emails_dframe() 
+    x, y = create_patients_dframe() 
     random_forest = RandomForestClassifier()
     scores = cross_val_score(random_forest, x, y)                                                     
-    print(scores)
+    return scores
 
 
 def test_decision_trees():
-    decision_tree_emails()
-    decision_tree_patients()
+    email_scores = decision_tree_emails()
+    patient_scores = decision_tree_patients()
+    print("The mean accuracy of the Decision Tree used to classify spam e-mails by \
+10-fold cross-validation is: " + "{:.1f}".format(email_scores.mean() * 100) + "%")
+    print("The mean accuracy of the Decision Tree used to classify diabetes by \
+5-fold cross-validation is: " + "{:.1f}".format(patient_scores.mean() * 100) + "%")
 
 def test_neural_networks():
-    neural_network_emails()
-    neural_network_patients()
+    email_scores = neural_network_emails()
+    patient_scores = neural_network_patients()
+    print("The mean accuracy of the Neural Network used to classify spam e-mails by \
+5-fold cross-validation is: " + "{:.1f}".format(email_scores.mean() * 100) + "%")
+    print("The mean accuracy of the Neural Network used to classify diabetes by \
+5-fold cross-validation is: " + "{:.1f}".format(patient_scores.mean() * 100) + "%")
 
 def test_kNN():
-    kNN_emails()
-    kNN_patients()
+    email_scores = kNN_emails()
+    patient_scores = kNN_patients()
+    print("The mean accuracy of the k-Nearest Neighbor algorithm used to classify spam e-mails by \
+5-fold cross-validation is: " + "{:.1f}".format(email_scores.mean() * 100) + "%")
+    print("The mean accuracy of the k-Nearest Neighbor algorithm used to classify diabetes by \
+5-fold cross-validation is: " + "{:.1f}".format(patient_scores.mean() * 100) + "%")
 
 def test_random_forest():
-    random_forest_emails()
-    random_forest_patients()
+    email_scores = random_forest_emails()
+    patient_scores = random_forest_patients()
+    print("The mean accuracy of the Random Forest used to classify spam e-mails by \
+5-fold cross-validation is: " + "{:.1f}".format(email_scores.mean() * 100) + "%")
+    print("The mean accuracy of the Random Forest used to classify diabetes by \
+5-fold cross-validation is: " + "{:.1f}".format(patient_scores.mean() * 100) + "%")
 
 
 test_decision_trees()
