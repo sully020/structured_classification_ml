@@ -1,5 +1,7 @@
 import pandas as pan
-from sklearn.model_selection import cross_val_score
+import seaborn as sea
+from sklearn.model_selection import cross_val_score, cross_val_predict
+from sklearn.metrics import confusion_matrix
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -19,15 +21,28 @@ def create_patients_dframe():
 
 def decision_tree_emails():
     x, y = create_emails_dframe()
-    dtree = DecisionTreeClassifier(criterion = 'gini', max_depth = 25) # ~lg(features) decisions with padding, 
-    scores = cross_val_score(dtree, x, y, cv = 10)                                
+    #weights = {0: 10, 1: 5, 2: 2.5}
+    dtree = DecisionTreeClassifier(max_depth = 24) # Exhaustively tried all pruning/smoothing options, none increased accuracy from OOTB.
+    scores = cross_val_score(dtree, x, y, cv = 10)    
+    preds = cross_val_predict(dtree, x, y, cv = 10) 
+    cf_matrix = confusion_matrix(y, preds)    
+    sea.heatmap(cf_matrix, annot)                      
     return scores
 
 def decision_tree_patients():
     x, y = create_patients_dframe()
     dtree = DecisionTreeClassifier(criterion = 'entropy', max_depth = 6) 
+    cf_matrix = confusion_matrix(y, preds)
     scores = cross_val_score(dtree, x, y)                                                   
     return scores
+
+
+def create_confusion_matrix(learner):
+    pass
+
+
+
+
 
 
 def neural_network_emails():
@@ -71,11 +86,11 @@ def random_forest_patients():
 
 def test_decision_trees():
     email_scores = decision_tree_emails()
-    patient_scores = decision_tree_patients()
+    #patient_scores = decision_tree_patients()
     print("The mean accuracy of the Decision Tree used to classify spam e-mails by \
 10-fold cross-validation is: " + "{:.1f}".format(email_scores.mean() * 100) + "%")
-    print("The mean accuracy of the Decision Tree used to classify diabetes by \
-5-fold cross-validation is: " + "{:.1f}".format(patient_scores.mean() * 100) + "%")
+    #print("The mean accuracy of the Decision Tree used to classify diabetes by \
+#5-fold cross-validation is: " + "{:.1f}".format(patient_scores.mean() * 100) + "%")
 
 def test_neural_networks():
     email_scores = neural_network_emails()
