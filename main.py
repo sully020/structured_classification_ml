@@ -1,5 +1,6 @@
 import pandas as pan
 import seaborn as sea
+from matplotlib import pyplot as plt
 from sklearn.model_selection import cross_val_score, cross_val_predict
 from sklearn.metrics import confusion_matrix
 from sklearn.tree import DecisionTreeClassifier
@@ -26,7 +27,8 @@ def decision_tree_emails():
     scores = cross_val_score(dtree, x, y, cv = 10)    
     preds = cross_val_predict(dtree, x, y, cv = 10) 
     cf_matrix = confusion_matrix(y, preds)    
-    sea.heatmap(cf_matrix, annot)                      
+    sea.heatmap(cf_matrix / sum(cf_matrix), annot=True, fmt='.2%', cmap='Reds')
+    plt.show()                  
     return scores
 
 def decision_tree_patients():
