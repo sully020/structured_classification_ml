@@ -46,8 +46,8 @@ def generate_email_heatmap(learner, cv):
 
 
 def model_learning_on_emails():
-    choice = input("Please enter your choice of learning model for the spam e-mails dataset: \
-    1.) 'decision tree' 2.) 'neural network' 3.) 'k neighbors' 4.) 'random forest': ")
+    choice = input("Please type your choice of learning model for the spam e-mails dataset: \
+1.) 'decision tree' 2.) 'neural network' 3.) 'k neighbors' 4.) 'random forest': ")
     learner, cv = choose_email_learner(choice)
     email_scores = score_email_predictions(learner, cv)
 
@@ -93,38 +93,17 @@ def generate_patients_heatmap(learner, cv):
     plt.show()
 
 def model_learning_on_patients():
-    choice = input("Please enter your choice of learning model for the diabetes patients dataset: \
-    1.) 'decision tree' 2.) 'neural network' 3.) 'k neighbors' 4.) 'random forest': ")
+    choice = input("Please type your choice of learning model for the diabetes patients dataset: \
+1.) 'decision tree' 2.) 'neural network' 3.) 'k neighbors' 4.) 'random forest': ")
+
     learner, cv = choose_patients_learner(choice)
     patients_scores = score_patients_predictions(learner, cv)
-    print("The mean accuracy of the Decision Tree used to classify diabetes by " \
+
+    print("The mean accuracy of the " + choice + " used to classify diabetes by " \
     + str(cv) + " fold cross-validation is: " + "{:.2f}".format(patients_scores.mean() * 100) + "%")
 
+    generate_patients_heatmap(learner, cv)
 
-# Leave us alone
-def decision_tree_patients():
-    x, y = create_patients_dframe()
-    dtree = DecisionTreeClassifier(criterion = 'entropy', max_depth = 6) 
-    scores = cross_val_score(dtree, x, y)                                                   
-    return scores
 
-def neural_network_patients():
-    x, y = create_patients_dframe()
-    neural_net = MLPClassifier()
-    scores = cross_val_score(neural_net, x, y)                                                   
-    return scores
-
-def kNN_patients():
-    x, y = create_patients_dframe()
-    kNN = KNeighborsClassifier()
-    scores = cross_val_score(kNN, x, y)                                                    
-    return scores
-
-def random_forest_patients():
-    x, y = create_patients_dframe() 
-    random_forest = RandomForestClassifier()
-    scores = cross_val_score(random_forest, x, y)                                                     
-    return scores
-
-test_emails_r()
-test_patients_r()
+model_learning_on_emails()
+model_learning_on_patients()
