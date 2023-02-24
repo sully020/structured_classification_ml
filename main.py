@@ -19,7 +19,7 @@ def choose_email_learner(choice):
     cv = 5
     match choice:
         case 'decision tree':
-            learner = DecisionTreeClassifier(max_depth = 24) # No manual pruning worked
+            learner = DecisionTreeClassifier() # No manual pruning worked, max_depth, max_features, weights
             cv = 10
         case 'neural network':
             learner = MLPClassifier()
@@ -44,7 +44,6 @@ def generate_email_heatmap(learner, cv):
     sea.heatmap(cf_matrix / np.sum(cf_matrix), annot=True, fmt='.2%', cmap='Reds')
     plt.show()
 
-
 def model_learning_on_emails():
     choice = input("Please type your choice of learning model for the spam e-mails dataset: \
 1.) 'decision tree' 2.) 'neural network' 3.) 'k neighbors' 4.) 'random forest': ")
@@ -68,9 +67,9 @@ def choose_patients_learner(choice):
     cv = 5
     match choice:
         case 'decision tree':
-            learner = DecisionTreeClassifier() # No manual pruning worked
+            learner = DecisionTreeClassifier(max_depth = 5) # depth, FINAL
         case 'neural network':
-            learner = MLPClassifier()
+            learner = MLPClassifier(learning_rate_init = .04, random_state = 0) #LEARNING RATE
         case 'k neighbors':
             learner = KNeighborsClassifier()
         case 'random forest':
@@ -81,13 +80,13 @@ def choose_patients_learner(choice):
     return learner, cv
 
 def score_patients_predictions(learner, cv):
-    x, y = create_patients_dframe()
-    scores = cross_val_score(learner, x, y, cv = cv)                      
-    return scores
+   x, y = create_patients_dframe()
+   scores = cross_val_score(learner, x, y, cv = cv)                      
+   return scores
 
 def generate_patients_heatmap(learner, cv):
     x, y = create_patients_dframe()
-    preds = cross_val_predict(learner, x, y, cv = cv) 
+    preds = cross_val_predict(learner, x, y, cv = cv)
     cf_matrix = confusion_matrix(y, preds)    
     sea.heatmap(cf_matrix / np.sum(cf_matrix), annot=True, fmt='.2%', cmap='Reds')
     plt.show()
@@ -106,4 +105,4 @@ def model_learning_on_patients():
 
 
 model_learning_on_emails()
-model_learning_on_patients()
+#model_learning_on_patients()
