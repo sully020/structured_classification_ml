@@ -19,14 +19,15 @@ def choose_email_learner(choice):
     cv = 5
     match choice:
         case 'decision tree':
-            learner = DecisionTreeClassifier() # No manual pruning worked, max_depth, max_features, weights
+            # weights = {i: 3000 - i for i in range(3000)}  // deprecated, 'balanced' further increases accuracy.
+            learner = DecisionTreeClassifier(class_weight = 'balanced') # DONE
             cv = 10
         case 'neural network':
-            learner = MLPClassifier()
+            learner = MLPClassifier() # TODO, hidden layers last
         case 'k neighbors':
-            learner = KNeighborsClassifier()
+            learner = KNeighborsClassifier(20, weights = 'distance', p = 1) # DONE
         case 'random forest':
-            learner = RandomForestClassifier()
+            learner = RandomForestClassifier() # TODO
         case _:
             raise ValueError("Inappropriate argument value of " + str(choice) + " entered.")
 
@@ -67,13 +68,13 @@ def choose_patients_learner(choice):
     cv = 5
     match choice:
         case 'decision tree':
-            learner = DecisionTreeClassifier(max_depth = 5) # depth, FINAL
+            learner = DecisionTreeClassifier(max_depth = 5) # DONE
         case 'neural network':
-            learner = MLPClassifier(learning_rate_init = .04, random_state = 0) #LEARNING RATE
+            learner = MLPClassifier(67, learning_rate_init = .04, random_state = 0) # DONE
         case 'k neighbors':
-            learner = KNeighborsClassifier()
+            learner = KNeighborsClassifier(19, weights = 'distance', p = 1) # DONE, weights and p only increase by tenths of percentage, not whole percentages like emails
         case 'random forest':
-            learner = RandomForestClassifier()
+            learner = RandomForestClassifier() # TODO
         case _:
             raise ValueError("Inappropriate argument value of " + str(choice) + " entered.")
 
@@ -104,5 +105,5 @@ def model_learning_on_patients():
     generate_patients_heatmap(learner, cv)
 
 
-model_learning_on_emails()
-#model_learning_on_patients()
+#model_learning_on_emails()
+model_learning_on_patients()
