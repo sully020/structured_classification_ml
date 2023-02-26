@@ -40,7 +40,7 @@ def generate_email_heatmap(learner):
     x, y = create_emails_dframe()
     preds = cross_val_predict(learner, x, y, cv = 10) 
     cf_matrix = confusion_matrix(y, preds)    
-    sea.heatmap(cf_matrix / np.sum(cf_matrix), annot=True, fmt='.2%', cmap=('YlOrRd'))
+    sea.heatmap(cf_matrix / np.sum(cf_matrix), annot=True, fmt='.2%', cmap=('Greens'))
     plt.show()
 
 def model_learning_on_emails():
@@ -54,7 +54,9 @@ def model_learning_on_emails():
 
     print("The mean accuracy of the " + choice + " during training was: " + "{:.2f}".format(email_scores['train_score'].mean() * 100) + "%")
 
-    generate_email_heatmap(learner)
+    print("The time on average that this " + choice + " took to train was " + "{:.2f}".format(email_scores['train_score'].mean()) + " second(s).")
+
+    #generate_email_heatmap(learner)
 
 
 
@@ -69,8 +71,7 @@ def choose_patients_learner(choice):
     cv = 5
     match choice:
         case 'decision tree':
-            learner = DecisionTreeClassifier(max_depth = 5, max_leaf_nodes = 21, random_state = 1)
-            cv = 10
+            learner = DecisionTreeClassifier(max_depth = 5, max_leaf_nodes = 21, random_state = 2)
         case 'neural network':
             learner = MLPClassifier(67, learning_rate_init = .04, random_state = 1)
             cv = 10
@@ -92,7 +93,7 @@ def generate_patients_heatmap(learner, cv):
     x, y = create_patients_dframe()
     preds = cross_val_predict(learner, x, y, cv = cv)
     cf_matrix = confusion_matrix(y, preds)    
-    sea.heatmap(cf_matrix / np.sum(cf_matrix), annot=True, fmt='.2%', cmap='Oranges')
+    sea.heatmap(cf_matrix / np.sum(cf_matrix), annot=True, fmt='.2%', cmap='Purples')
     plt.show()
 
 def model_learning_on_patients():
@@ -107,8 +108,10 @@ def model_learning_on_patients():
 
     print("The mean accuracy of the " + choice + " during training was " + "{:.2f}".format(patients_scores['train_score'].mean() * 100) + "%")
 
-    generate_patients_heatmap(learner, cv)
+    print("The time on average that this " + choice + " took to train was " + "{:.2f}".format(patients_scores['train_score'].mean()) + " second(s).")
+
+    #generate_patients_heatmap(learner, cv)
 
 
-#model_learning_on_emails()
+model_learning_on_emails()
 model_learning_on_patients()
