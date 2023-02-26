@@ -27,7 +27,6 @@ https://www.kaggle.com/code/mathchi/diagnostic-a-patient-has-diabetes/notebook :
 Credits:
 https://medium.com/@dtuk81/confusion-matrix-visualization-fc31e3f30fea
    - Aided in realizing visualization of confusion matrix through seaborn.
-
 """
 
 import pandas as pan
@@ -50,7 +49,6 @@ def create_emails_dframe():
 def choose_email_learner(choice):
     match choice:
         case 'decision tree':
-            # weights = {i: 3000 - i for i in range(3000)}  // deprecated, 'balanced' further increases accuracy.
             learner = DecisionTreeClassifier(class_weight = 'balanced')
         case 'neural network':
             learner = MLPClassifier()
@@ -99,7 +97,6 @@ def create_patients_dframe():
     return x, y
 
 def choose_patients_learner(choice):
-    # CV 5 produces better results for some of these
     cv = 5
     match choice:
         case 'decision tree':
@@ -108,7 +105,7 @@ def choose_patients_learner(choice):
             learner = MLPClassifier(67, learning_rate_init = .04, random_state = 1)
             cv = 10
         case 'k neighbors':
-            learner = KNeighborsClassifier(19, weights = 'distance', p = 1) # weights and p only increase by tenths of percentage, not whole percentages like emails
+            learner = KNeighborsClassifier(19, weights = 'distance', p = 1)
         case 'random forest':
             learner = RandomForestClassifier(random_state = 0)
         case _:
