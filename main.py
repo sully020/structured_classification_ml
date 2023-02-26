@@ -1,3 +1,35 @@
+""" 
+Supervised Learning Analysis - main.py
+Christopher D. Sullivan
+Professor Brian O'Neill
+2/27/23
+
+The goal of this program is to use four supervised machine learning techniques 
+for two binary classification problems each. This is achieved by instantiating each technique
+using sklearn, then training and testing them against the chosen data using cross-validation.
+From there, average accuracy scores during test runs as well as training runs
+are recorded, as well as training times in order to compare the various algorithms.
+
+Imports:
+https://pandas.pydata.org/ - pandas
+https://seaborn.pydata.org/ - seaborn
+https://numpy.org/          - numpy
+https://matplotlib.org/     - matplotlib
+https://scikit-learn.org/stable/ - scikit learn
+
+Datasets:
+https://www.kaggle.com/datasets/balaka18/email-spam-classification-dataset-csv : Balaka Biswas
+   - Classifies 5,000+ e-mails on whether or not they are considered 'spam'.
+
+https://www.kaggle.com/code/mathchi/diagnostic-a-patient-has-diabetes/notebook : Mehmet Akturk
+   - Classifies 700+ patients on whether or not they test + for diabetes.   
+
+Credits:
+https://medium.com/@dtuk81/confusion-matrix-visualization-fc31e3f30fea
+   - Aided in realizing visualization of confusion matrix through seaborn.
+
+"""
+
 import pandas as pan
 import seaborn as sea
 import numpy as np
@@ -93,7 +125,7 @@ def generate_patients_heatmap(learner, cv):
     x, y = create_patients_dframe()
     preds = cross_val_predict(learner, x, y, cv = cv)
     cf_matrix = confusion_matrix(y, preds)    
-    sea.heatmap(cf_matrix / np.sum(cf_matrix), annot=True, fmt='.2%', cmap='Purples')
+    sea.heatmap(cf_matrix / np.sum(cf_matrix), annot=True, fmt='.2%', cmap='Purples') 
     plt.show()
 
 def model_learning_on_patients():
@@ -111,6 +143,7 @@ def model_learning_on_patients():
     print("The time on average that this " + choice + " took to train was " + "{:.2f}".format(patients_scores['train_score'].mean()) + " second(s).")
 
     #generate_patients_heatmap(learner, cv)
+
 
 
 model_learning_on_emails()
