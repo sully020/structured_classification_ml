@@ -40,18 +40,20 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 
+# Convert the emails.csv file to a pandas dataframe for usability.
 def create_emails_dframe():
     emails = pan.read_csv('emails.csv')
     x = emails.drop(columns = ['Email No.', 'class_val'])
     y = emails['class_val']
     return x, y
 
+# Prompts the user for a string and selects learning technique accordingly.
 def choose_email_learner(choice):
     match choice:
-        case 'decision tree':
-            learner = DecisionTreeClassifier(class_weight = 'balanced')
         case 'neural network':
-            learner = MLPClassifier()
+            learner = MLPClassifier(max_iter = 75, random_state = 0)
+        case 'decision tree':
+            learner = DecisionTreeClassifier(class_weight = 'balanced', random_state = 2)
         case 'k neighbors':
             learner = KNeighborsClassifier(20, weights = 'distance', p = 1)
         case 'random forest':
@@ -61,11 +63,13 @@ def choose_email_learner(choice):
 
     return learner
 
+# Returns the average training & test scores as well as train time. 10-fold cross-validation.
 def score_email_predictions(learner):
     x, y = create_emails_dframe()
     scores = cross_validate(learner, x, y, cv = 10, return_train_score = True)                      
     return scores
 
+# Creates a visualized confusion matrix based on the chosen learner.
 def generate_email_heatmap(learner):
     x, y = create_emails_dframe()
     preds = cross_val_predict(learner, x, y, cv = 10) 
@@ -73,6 +77,7 @@ def generate_email_heatmap(learner):
     sea.heatmap(cf_matrix / np.sum(cf_matrix), annot=True, fmt='.2%', cmap=('Greens'))
     plt.show()
 
+# Output the results of training and testing the learner using emails.csv, optionally produce heatmap visualization.
 def model_learning_on_emails():
     choice = input("Please type your choice of learning model for the spam e-mails dataset: \
 1.) 'decision tree' 2.) 'neural network' 3.) 'k neighbors' 4.) 'random forest': ")
@@ -82,28 +87,30 @@ def model_learning_on_emails():
     print("The mean accuracy of the " + choice + " used to classify spam e-mails by " 
     + "10-fold cross-validation is: " + "{:.2f}".format(email_scores['test_score'].mean() * 100) + "%\n")
 
-    print("The mean accuracy of the " + choice + " during training was: " + "{:.2f}".format(email_scores['train_score'].mean() * 100) + "%")
+    print("The mean accuracy of the " + choice + " during training was: " + "{:.2f}".format(email_scores['train_score'].mean() * 100) + "%\n")
 
-    print("The time on average that this " + choice + " took to train was " + "{:.2f}".format(email_scores['train_score'].mean()) + " second(s).")
+    print("The time on average that this " + choice + " took to train was " + "{:.2f}".format(email_scores['fit_time'].mean()) + " second(s).\n")
 
-    #generate_email_heatmap(learner)
+    generate_email_heatmap(learner)
 
 
 
+# Convert the diabetes.csv file to a pandas dataframe for usability.
 def create_patients_dframe():
     patients = pan.read_csv('diabetes.csv')
     x = patients.drop(columns = 'class_val')
     y = patients['class_val']
     return x, y
 
+# Returns the average training & test scores as well as train time. 
 def choose_patients_learner(choice):
-    cv = 5
+    cvk = 5
     match choice:
-        case 'decision tree':
-            learner = DecisionTreeClassifier(max_depth = 5, max_leaf_nodes = 21, random_state = 2)
         case 'neural network':
             learner = MLPClassifier(67, learning_rate_init = .04, random_state = 1)
-            cv = 10
+            cvk = 10
+        case 'decision tree':
+            learner = DecisionTreeClassifier(max_depth = 5, max_leaf_nodes = 21, random_state = 2)
         case 'k neighbors':
             learner = KNeighborsClassifier(19, weights = 'distance', p = 1)
         case 'random forest':
@@ -111,35 +118,38 @@ def choose_patients_learner(choice):
         case _:
             raise ValueError("Inappropriate argument value of " + str(choice) + " entered.")
 
-    return learner, cv
+    return learner, cvk
 
-def score_patients_predictions(learner, cv):
+#  Returns the training & test scores as well as train time. k-fold cross-validation.
+def score_patients_predictions(learner, cvk):
    x, y = create_patients_dframe()
-   scores = cross_validate(learner, x, y, cv = cv, return_train_score = True)                      
+   scores = cross_validate(learner, x, y, cv = cvk, return_train_score = True)                      
    return scores
 
-def generate_patients_heatmap(learner, cv):
+# Creates a visualized confusion matrix based on the chosen learner.
+def generate_patients_heatmap(learner, cvk):
     x, y = create_patients_dframe()
-    preds = cross_val_predict(learner, x, y, cv = cv)
+    preds = cross_val_predict(learner, x, y, cv = cvk)
     cf_matrix = confusion_matrix(y, preds)    
     sea.heatmap(cf_matrix / np.sum(cf_matrix), annot=True, fmt='.2%', cmap='Purples') 
     plt.show()
 
+# Output the results of training and testing the learner using diabetes.csv, optionally produce heatmap visualization.
 def model_learning_on_patients():
     choice = input("Please type your choice of learning model for the diabetes patients dataset: \
 1.) 'decision tree' 2.) 'neural network' 3.) 'k neighbors' 4.) 'random forest': ")
 
-    learner, cv = choose_patients_learner(choice)
-    patients_scores = score_patients_predictions(learner, cv)
+    learner, cvk = choose_patients_learner(choice)
+    patients_scores = score_patients_predictions(learner, cvk)
 
     print("The mean accuracy of the " + choice + " used to classify diabetes by " \
-    + str(cv) + " fold cross-validation is: " + "{:.2f}".format(patients_scores['test_score'].mean() * 100) + "%\n")
+    + str(cvk) + " fold cross-validation is: " + "{:.2f}".format(patients_scores['test_score'].mean() * 100) + "%\n")
 
-    print("The mean accuracy of the " + choice + " during training was " + "{:.2f}".format(patients_scores['train_score'].mean() * 100) + "%")
+    print("The mean accuracy of the " + choice + " during training was " + "{:.2f}".format(patients_scores['train_score'].mean() * 100) + "%\n")
 
-    print("The time on average that this " + choice + " took to train was " + "{:.2f}".format(patients_scores['train_score'].mean()) + " second(s).")
+    print("The time on average that this " + choice + " took to train was " + "{:.2f}".format(patients_scores['fit_time'].mean()) + " second(s).")
 
-    #generate_patients_heatmap(learner, cv)
+    generate_patients_heatmap(learner, cvk)
 
 
 
