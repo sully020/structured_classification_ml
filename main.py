@@ -91,7 +91,7 @@ def model_learning_on_emails():
 
     print("The time on average that this " + choice + " took to train was " + "{:.2f}".format(email_scores['fit_time'].mean()) + " second(s).\n")
 
-    generate_email_heatmap(learner)
+    #generate_email_heatmap(learner)
 
 
 
@@ -149,7 +149,7 @@ def model_learning_on_patients():
 
     print("The time on average that this " + choice + " took to train was " + "{:.2f}".format(patients_scores['fit_time'].mean()) + " second(s).")
 
-    generate_patients_heatmap(learner, cvk)
+    #generate_patients_heatmap(learner, cvk)
 
 
 
