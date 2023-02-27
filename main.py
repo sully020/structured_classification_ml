@@ -112,7 +112,7 @@ def choose_patients_learner(choice):
         case 'decision tree':
             learner = DecisionTreeClassifier(max_depth = 5, max_leaf_nodes = 21, random_state = 2)
         case 'k neighbors':
-            learner = KNeighborsClassifier(19, weights = 'distance', p = 1)
+            learner = KNeighborsClassifier(24, weights = 'distance', p = 1)
         case 'random forest':
             learner = RandomForestClassifier(random_state = 0)
         case _:
