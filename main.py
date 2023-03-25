@@ -131,7 +131,7 @@ def generate_patients_heatmap(learner, cvk):
     x, y = create_patients_dframe()
     preds = cross_val_predict(learner, x, y, cv = cvk)
     cf_matrix = confusion_matrix(y, preds)    
-    sea.heatmap(cf_matrix / np.sum(cf_matrix), annot=True, fmt='.2%', cmap='Purples') 
+    sea.heatmap(cf_matrix / np.sum(cf_matrix), annot=True, fmt='.2%', cmap='summer') 
     plt.show()
 
 # Output the results of training and testing the learner using diabetes.csv, optionally produce heatmap visualization.
